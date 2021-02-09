@@ -5,7 +5,7 @@ import os
 import random
 import string
 from enum import Enum
-from typing import List, NoReturn, Optional
+from typing import NoReturn
 
 import typer
 
@@ -14,6 +14,10 @@ from pronouns_test_data.models import (
     PronounTestCase,
     ValidCharacters,
 )
+
+__all__ = [
+    'generate_test_data'
+]
 
 
 def generate_jargon(valid_chars: str, length: int) -> str:
