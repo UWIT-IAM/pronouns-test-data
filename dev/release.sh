@@ -67,6 +67,10 @@ $CMD_PREFIX git commit -m "Release version ${VERSION}"
 echo "Copying assets to the storage bucket"
 $CMD_PREFIX gsutil cp pronouns_test_data/data/*.{csv,json} gs://${BUCKET_NAME}/pronouns/test-data/
 
+echo "Tagging commit as version ${VERSION}"
+$CMD_PREFIX git tag -a "${VERSION}" -m "Release version ${VERSION}"
+$CMD_PREFIX git push origin "${VERSION}"
+
 if test -n "${DRY_RUN}"
 then
   echo "Resetting local changes to pyproject.toml after dry run"

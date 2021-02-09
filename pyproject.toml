@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pronouns-test-data"
-version = "0.1.0"
+version = "1.0.0"
 description = "A library to aid in vending test data for UW-IT IAM pronouns test cases."
 authors = ["Tom Thorogood <tom@tomthorogood.com>"]
 
