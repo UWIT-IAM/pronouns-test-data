@@ -8,15 +8,24 @@ test data that potential consumers of pronouns can use to:
 - Find edge cases in presentation layers (for example, very long strings, strings 
   without spaces, etc.)
   
-The use cases are a mix of "real" responses (responses that you are likely to see 
-when users set their pronoun preferences), presumed edge cases, and absolute jargon 
+The data use cases are a mix of "real" responses (responses that you are likely to 
+see when users set their pronoun preferences), presumed edge cases (mistakes actual 
+users are likely to make), and absolute jargon 
 (for testing value length, parsing, etc.). Each case has a `use_case/useCase` 
 property that describes the data value.
+
+Each test case has an associated `uwnetid` field. If your system is able to look up 
+Identity Registry or Person Web Service data, you should be able to validate that 
+the user's pronoun values in those system match the value provided in the test data 
+set. 
 
 We currently have a limited pool of UW NetIDs allocated to this test. If you think 
 there are important use cases we're missing from this test data, please email 
 [help@uw.edu](mailto:help@uw.edu?subject=UW-IT+IAM+Pronouns+Test+Data+Request) and 
 explain your request. You can ask for this to be routed to UW-IT IAM.
+
+**Note:** We may update these cases to reflect actual usage once we have real data 
+from our users.
 
 ## Using this data
 
