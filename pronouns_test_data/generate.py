@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import csv
 import os
 import random
 import string
 from enum import Enum
-from typing import List, Optional
+from typing import List, NoReturn, Optional
 
 import typer
 
@@ -17,6 +18,21 @@ from pronouns_test_data.models import (
 
 def generate_jargon(valid_chars: str, length: int) -> str:
     return "".join([random.choice(valid_chars) for _ in range(length)])
+
+
+def write_raw_data(filename: str, data: str) -> NoReturn:
+    with open(filename, 'w') as f:
+        f.write(data)
+    typer.echo(f"Wrote JSON data to {filename}")
+
+
+def write_csv_data(filename: str, data: GeneratedTestData):
+    with open(filename, 'w', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=list(PronounTestCase.__fields__.keys()))
+        writer.writeheader()
+        for case in data.test_cases:
+            writer.writerow(case.dict())
+    typer.echo(f"Wrote CSV data to {filename}")
 
 
 def generate_test_data() -> GeneratedTestData:
@@ -123,46 +139,35 @@ def generate_test_data() -> GeneratedTestData:
     )
 
 
+class OutputType(Enum):
+    json = 'json'
+    csv = 'csv'
+
+
 def app(
-    out: Optional[str] = typer.Option(
-        None,
-        "--out",
+    out: str = typer.Option(
+        "data",
+        "--output-path",
         "-o",
-        help="The relative or absolute path name for the JSON output.",
+        help="The directory "
     ),
-    auto_confirm: bool = typer.Option(
-        False,
-        "--yes",
-        "-y",
-        help="Use this if you don't want to confirm file " "overwrites.",
-    ),
-    quiet: bool = typer.Option(
-        False,
-        "--quiet",
-        "-q",
-        help="Use this if you don't want to see the generated data.",
-    ),
+    file_prefix: str = typer.Option(
+        "iam-pronouns-test-data",
+        "--file-prefix",
+        "-f",
+        help="The filename to use before the filetype extension (e.g., the `foo` in `foo.json`)"
+    )
 ):
-    if quiet and not out:
-        raise typer.Exit(
-            "No possible output. Please remove the --quiet/-q flag or provide an --output/-o "
-            "target. Exiting."
-        )
+    test_data = generate_test_data()
+    if not os.path.exists(out):
+        os.makedirs(out, exist_ok=True)
 
-    test_cases = generate_test_data().json(by_alias=True, indent=4)
+    json_out = os.path.join(out, f'{file_prefix}.json')
+    csv_out = os.path.join(out, f'{file_prefix}.csv')
 
-    if not quiet:
-        typer.echo(test_cases)
-
-    if out:
-        if os.path.exists(out) and not auto_confirm:
-            typer.confirm(
-                f"WARNING: File '{out}' already exists. Do you want to overwrite it?",
-                abort=True,  # If the user says "no," the program will exit.
-            )
-        with open(out, "w") as f:
-            f.write(test_cases)
-            typer.echo(f"Wrote test data to '{out}'.")
+    test_json = test_data.json(by_alias=True, indent=4)
+    write_raw_data(json_out, test_json)
+    write_csv_data(csv_out, test_data)
 
 
 if __name__ == "__main__":
