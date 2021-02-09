@@ -148,22 +148,26 @@ class OutputType(Enum):
     csv = 'csv'
 
 
+HERE = os.path.abspath(os.path.dirname(__file__))
+
 def app(
     out: str = typer.Option(
-        "data",
+        os.path.join(HERE, 'data'),
         "--output-path",
         "-o",
-        help="The directory "
+        help="The directory where you want the generated artifacts to go."
     ),
     file_prefix: str = typer.Option(
-        "iam-pronouns-test-data",
+        "latest",
         "--file-prefix",
         "-f",
-        help="The filename to use before the filetype extension (e.g., the `foo` in `foo.json`)"
+        help="The filename to use before the filetype extension (e.g., the `foo` in `foo.json). By default it will "
+             "use 'latest' so that when the changes are released, they are published as-is."
     )
 ):
     test_data = generate_test_data()
     if not os.path.exists(out):
+        typer.echo(f"Creating output path {out}")
         os.makedirs(out, exist_ok=True)
 
     json_out = os.path.join(out, f'{file_prefix}.json')
