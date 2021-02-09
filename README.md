@@ -27,8 +27,8 @@ this package to load the data (or generate your own test cases).
 
 No matter your use case, you can consume the data as:
 
-- `JSON`: https://identity-cdn.iamprod.s.uw.edu/pronouns/test-data/latest.json
-- `CSV`: https://identity-cdn.iamprod.s.uw.edu/pronouns/test-data/latest.csv
+- `JSON`: https://identity.cdn.iamprod.s.uw.edu/pronouns/test-data/latest.json
+- `CSV`: https://identity.cdn.iamprod.s.uw.edu/pronouns/test-data/latest.csv
 
 The `latest` version will always reflect what is stored in the Identity Registry.
 However, see [versioning][#versioning] for how to rely on specific data values.
