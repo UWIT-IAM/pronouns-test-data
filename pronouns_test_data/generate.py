@@ -15,9 +15,7 @@ from pronouns_test_data.models import (
     ValidCharacters,
 )
 
-__all__ = [
-    'generate_test_data'
-]
+__all__ = ["generate_test_data"]
 
 
 def generate_jargon(valid_chars: str, length: int) -> str:
@@ -25,13 +23,13 @@ def generate_jargon(valid_chars: str, length: int) -> str:
 
 
 def write_raw_data(filename: str, data: str) -> NoReturn:
-    with open(filename, 'w') as f:
+    with open(filename, "w") as f:
         f.write(data)
     typer.echo(f"Wrote JSON data to {filename}")
 
 
 def write_csv_data(filename: str, data: GeneratedTestData):
-    with open(filename, 'w', newline='') as f:
+    with open(filename, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=list(PronounTestCase.__fields__.keys()))
         writer.writeheader()
         for case in data.test_cases:
@@ -144,34 +142,35 @@ def generate_test_data() -> GeneratedTestData:
 
 
 class OutputType(Enum):
-    json = 'json'
-    csv = 'csv'
+    json = "json"
+    csv = "csv"
 
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
+
 def app(
     out: str = typer.Option(
-        os.path.join(HERE, 'data'),
+        os.path.join(HERE, "data"),
         "--output-path",
         "-o",
-        help="The directory where you want the generated artifacts to go."
+        help="The directory where you want the generated artifacts to go.",
     ),
     file_prefix: str = typer.Option(
         "latest",
         "--file-prefix",
         "-f",
         help="The filename to use before the filetype extension (e.g., the `foo` in `foo.json). By default it will "
-             "use 'latest' so that when the changes are released, they are published as-is."
-    )
+        "use 'latest' so that when the changes are released, they are published as-is.",
+    ),
 ):
     test_data = generate_test_data()
     if not os.path.exists(out):
         typer.echo(f"Creating output path {out}")
         os.makedirs(out, exist_ok=True)
 
-    json_out = os.path.join(out, f'{file_prefix}.json')
-    csv_out = os.path.join(out, f'{file_prefix}.csv')
+    json_out = os.path.join(out, f"{file_prefix}.json")
+    csv_out = os.path.join(out, f"{file_prefix}.csv")
 
     test_json = test_data.json(by_alias=True, indent=4)
     write_raw_data(json_out, test_json)
